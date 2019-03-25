@@ -1,0 +1,5 @@
+Put TLS certificates here in case they are static.
+
+Can be downloaded manually from:
+
+https://assets.windscribe.com/desktop/other/openvpn_cert.zip
