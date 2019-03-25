@@ -5,7 +5,7 @@ require "ipaddr"
 cwd = File.dirname(__FILE__)
 Dir.chdir(cwd)
 
-countries = File.foreach("../template/countries.txt")
+servers = File.foreach("../template/servers.csv")
 
 ca = File.read("../certs/ca.crt")
 tlsStrategy = "auth"
@@ -22,9 +22,9 @@ tlsKey = [[tlsKey].pack("H*")].pack("m0")
 ###
 
 pools = []
-countries.with_index { |line, n|
-    country = line.strip.downcase
-    hostname = "#{country}.windscribe.com"
+servers.with_index { |line, n|
+    id, country, area = line.downcase.strip.split(",")
+    hostname = "#{id}.windscribe.com"
 
     addresses = nil
     if ARGV.length > 0 && ARGV[0] == "noresolv"
@@ -38,12 +38,13 @@ countries.with_index { |line, n|
     }
 
     pool = {
-        :id => country,
+        :id => id,
         :name => "",
-        :country => country,
-        :hostname => hostname,
-        :addrs => addresses
+        :country => country.downcase
     }
+    pool[:area] = area if !area.nil?
+    pool[:hostname] = hostname
+    pool[:addrs] = addresses
     pools << pool
 }
 
