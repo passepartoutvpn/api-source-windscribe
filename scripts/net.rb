@@ -5,19 +5,72 @@ require "ipaddr"
 cwd = File.dirname(__FILE__)
 Dir.chdir(cwd)
 
+###
+
+def read_static_key(file, from, to)
+    lines = File.foreach(file)
+    key = ""
+    lines.with_index { |line, n|
+        next if n < from or n >= to
+        key << line.strip
+    }
+    return [[key].pack("H*")].pack("m0")
+end
+
+###
+
 servers = File.foreach("../template/servers.csv")
+ca = File.read("../static/ca.crt")
+tls_key = read_static_key("../static/ta.key", 1, 17)
+tls_strategy = "auth"
+tls_dir = 1
 
-ca = File.read("../certs/ca.crt")
-tlsStrategy = "auth"
-tlsKeyLines = File.foreach("../certs/ta.key")
-tlsDirection = 1
-
-tlsKey = ""
-tlsKeyLines.with_index { |line, n|
-    next if n < 1 or n >= 17
-    tlsKey << line.strip
+cfg = {
+    ca: ca,
+    ep: [
+        "UDP:443",
+        "UDP:80",
+        "UDP:53",
+        "UDP:1194",
+        "UDP:54783",
+        "TCP:443",
+        "TCP:587",
+        "TCP:21",
+        "TCP:22",
+        "TCP:80",
+        "TCP:143",
+        "TCP:3306",
+        "TCP:8080",
+        "TCP:54783",
+        "TCP:1194"
+    ],
+    cipher: "AES-256-GCM",
+    auth: "SHA512",
+    wrap: {
+        strategy: tls_strategy,
+        key: {
+            data: tls_key,
+            dir: tls_dir,
+        }
+    },
+    frame: 1,
+    compression: 1,
+    eku: true
 }
-tlsKey = [[tlsKey].pack("H*")].pack("m0")
+
+recommended = {
+    id: "default",
+    name: "Default",
+    comment: "256-bit encryption",
+    cfg: cfg
+}
+presets = [recommended]
+
+defaults = {
+    :username => "abc1efg2-hijk345",
+    :pool => "us-central",
+    :preset => "default"
+}
 
 ###
 
@@ -46,51 +99,6 @@ servers.with_index { |line, n|
     pool[:hostname] = hostname
     pool[:addrs] = addresses
     pools << pool
-}
-
-strong = {
-    id: "default",
-    name: "Default",
-    comment: "256-bit encryption",
-    cfg: {
-        ep: [
-            "UDP:443",
-            "UDP:80",
-            "UDP:53",
-            "UDP:1194",
-            "UDP:54783",
-            "TCP:443",
-            "TCP:587",
-            "TCP:21",
-            "TCP:22",
-            "TCP:80",
-            "TCP:143",
-            "TCP:3306",
-            "TCP:8080",
-            "TCP:54783",
-            "TCP:1194"
-        ],
-        cipher: "AES-256-GCM",
-        auth: "SHA512",
-        ca: ca,
-        wrap: {
-            strategy: tlsStrategy,
-            key: {
-                data: tlsKey,
-                dir: tlsDirection,
-            }
-        },
-        frame: 1,
-        compression: 1,
-        eku: true
-    }
-}
-presets = [strong]
-
-defaults = {
-    :username => "abc1efg2-hijk345",
-    :pool => "us-central",
-    :preset => "default"
 }
 
 ###
