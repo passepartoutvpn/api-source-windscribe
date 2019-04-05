@@ -93,7 +93,7 @@ servers.with_index { |line, n|
     pool = {
         :id => id,
         :name => "",
-        :country => country.downcase
+        :country => country
     }
     pool[:area] = area if !area.nil?
     pool[:hostname] = hostname
