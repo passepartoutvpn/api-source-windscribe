@@ -76,7 +76,7 @@ defaults = {
 
 pools = []
 servers.with_index { |line, n|
-    id, country, area = line.downcase.strip.split(",")
+    id, country, area = line.strip.split(",")
     hostname = "#{id}.windscribe.com"
 
     addresses = nil
