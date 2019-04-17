@@ -5,7 +5,10 @@ SERVERS_SRC="$TPL/servers.html"
 SERVERS_DST="$TPL/servers.csv"
 
 mkdir -p $TPL
-curl -L $URL >$SERVERS_SRC
+if ! curl -L $URL >$SERVERS_SRC.tmp; then
+    exit
+fi
+mv $SERVERS_SRC.tmp $SERVERS_SRC
 sed -nE "s/^.*<td><i class=\"cflag ([A-Z]+)\".*$/\1,\1,/p" $SERVERS_SRC >$SERVERS_DST
 
 # fix codes inconsistencies
