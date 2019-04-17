@@ -93,7 +93,6 @@ servers.with_index { |line, n|
 
     pool = {
         :id => id,
-        :name => "",
         :country => country
     }
     pool[:area] = area if !area.nil?
