@@ -95,7 +95,13 @@ servers.with_index { |line, n|
         :id => id,
         :country => country
     }
-    pool[:area] = area if !area.nil?
+    if !area.nil?
+        if area == "WINDFLIX"
+            pool[:category] = area
+        else
+            pool[:area] = area
+        end
+    end
     pool[:hostname] = hostname
     pool[:addrs] = addresses
     pools << pool
