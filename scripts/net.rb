@@ -81,7 +81,7 @@ servers.with_index { |line, n|
     hostname = "#{id}.windscribe.com"
 
     addresses = nil
-    if ARGV.length > 0 && ARGV[0] == "noresolv"
+    if ARGV.include? "noresolv"
         addresses = []
         #addresses = ["1.2.3.4"]
     else
@@ -93,10 +93,15 @@ servers.with_index { |line, n|
 
     pool = {
         :id => id,
-        :name => "",
         :country => country
     }
-    pool[:area] = area if !area.nil?
+    if !area.nil?
+        if area == "WINDFLIX"
+            pool[:category] = area
+        else
+            pool[:area] = area
+        end
+    end
     pool[:hostname] = hostname
     pool[:addrs] = addresses
     pools << pool
