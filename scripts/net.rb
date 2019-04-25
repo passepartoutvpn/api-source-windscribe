@@ -102,7 +102,7 @@ servers.with_index { |line, n|
     }
     if !area.nil?
         if area == "WINDFLIX"
-            pool[:category] = area
+            pool[:category] = area.downcase
         else
             pool[:area] = area
         end
