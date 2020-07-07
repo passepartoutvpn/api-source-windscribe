@@ -10,7 +10,7 @@ load "util.rb"
 
 servers = File.foreach("../template/servers.csv")
 ca = File.read("../static/ca.crt")
-tls_wrap = read_tls_wrap("auth", 1, "../static/ta.key", 1, 17)
+tls_wrap = read_tls_wrap("auth", 1, "../static/ta.key", 1)
 
 cfg = {
     ca: ca,
