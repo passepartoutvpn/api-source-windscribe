@@ -35,7 +35,7 @@ cfg = {
     cipher: "AES-256-GCM",
     auth: "SHA512",
     frame: 1,
-    compression: 1,
+    compression: 0,
     eku: true
 }
 
