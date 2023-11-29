@@ -17,7 +17,7 @@ cfg = {
   tlsWrap: tls_wrap,
   cipher: "AES-256-GCM",
   digest: "SHA512",
-  compressionFraming: 1,
+  compressionFraming: 0,
   compressionAlgorithm: 0,
   checksEKU: true
 }
