@@ -4,6 +4,9 @@ TPL="template"
 SERVERS_SRC="$TPL/servers.html"
 SERVERS_DST="$TPL/servers.csv"
 
+echo "Scraping is outdated"
+exit 1
+
 mkdir -p $TPL
 if ! curl -L $URL >$SERVERS_SRC.tmp; then
     exit
